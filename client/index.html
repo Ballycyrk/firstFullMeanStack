@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang='en' ng-app="ballyCyrk">
+<head>
+  <meta charset='utf-8'>
+  <title>Friends App </title>
+  <script type="text/javascript" src="../static/js/angular.js"></script>
+  <script type="text/javascript">
+    var ballyCyrk = angular.module("ballyCyrk", []);
+
+    ballyCyrk.factory('friendFactory', function($http){
+      var factory ={};
+      factory.index = function(callback) {
+        $http.get('/friends').success(function(output){
+          friends = output;
+          callback(friends);
+        })
+      };
+      factory.create = function($friend) { friends.push($friend); };
+
+      return factory;
+    });
+
+    ballyCyrk.controller('friendsController', function($scope, friendFactory){
+      $scope.index = function(){
+        friendFactory.index(function(data){ $scope.friends = data; });
+      };
+
+      $scope.addFriend = function(){
+        friendFactory.create($scope.newFriend);
+        $scope.newFriend = {};
+      };
+      $scope.index();
+    });
+  </script>
+</head>
+<body ng-controller="friendsController">
+  <div class="container">
+    <h1>Friends</h1>
+    <input type="text" ng-model="filter_name" placeholder="filter" ng-bind="filter_name"/>
+    <ul>
+      <li ng-repeat="friend in friends | filter:filter_name">
+        {{friend.name}}, {{friend.age}}
+      </li>
+    </ul>
+    <hr>
+    <h2>Add a friend:</h2>
+    <label>Name: <input type="text" ng-model="newFriend.name" /></label>
+    <label>Age: <input type="text" ng-model="newFriend.age" /></label>
+    <input type="submit" value='Make friend' ng-click="addFriend()">
+  </div>
+</body>
+</html>
