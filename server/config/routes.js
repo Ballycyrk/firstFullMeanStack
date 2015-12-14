@@ -6,5 +6,8 @@ module.exports = function(app) {
   app.post('/friends', function(req, res){
     friends.create(req, res);
   });
+  app.post('/friends/delete', function(req, res) {
+    friends.delete(req, res);
+  });
 };
 

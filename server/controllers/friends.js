@@ -17,10 +17,17 @@ module.exports = (function() {
       friend.save(function(err){
         if (err){
           console.log('CREATE',err);
-        } else {
-          res.json(friend);
         }
+        res.redirect('/friends');
       });
+    },
+    delete: function(req, res) {
+      Friend.remove({_id: req.body._id}, function (err){
+        if (err) {
+          console.log('DELETE', err);
+        }
+        res.redirect('/friends');
+      })
     }
   };
 })();

@@ -22,6 +22,13 @@
         })
       };
 
+      factory.delete = function($friend, callback) {
+        $http.post('/friends/delete', $friend).success(function(output){
+          friends = output;
+          callback(friends);
+        })
+      };
+
       return factory;
     });
 
@@ -31,9 +38,13 @@
       };
 
       $scope.addFriend = function(){
-        friendFactory.create($scope.newFriend);
+        friendFactory.create($scope.newFriend, $scope.index);
         $scope.newFriend = {};
       };
+
+      $scope.removeFriend = function($friend){
+        friendFactory.delete($friend, $scope.index);
+      }
       $scope.index();
     });
   </script>
@@ -42,11 +53,22 @@
   <div class="container">
     <h1>Friends</h1>
     <input type="text" ng-model="filter_name" placeholder="filter" ng-bind="filter_name"/>
-    <ul>
-      <li ng-repeat="friend in friends | filter:filter_name">
-        {{friend.name}}, {{friend.age}}
-      </li>
-    </ul>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Age</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="friend in friends">
+          <td ng-bind="friend.name"></td>
+          <td ng-bind="friend.age"></td>
+          <td><button ng-click="removeFriend(friend)">Remove</button></td>
+        </tr>
+      </tbody>
+    </table>
     <hr>
     <h2>Add a friend:</h2>
     <label>Name: <input type="text" ng-model="newFriend.name" /></label>
