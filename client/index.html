@@ -15,7 +15,12 @@
           callback(friends);
         })
       };
-      factory.create = function($friend) { friends.push($friend); };
+      factory.create = function($friend, callback) {
+        $http.post('/friends', $friend).success(function(output){
+          friends = output;
+          callback(friends);
+        })
+      };
 
       return factory;
     });
